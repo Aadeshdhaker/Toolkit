@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Editor - Edit Images Online for Free</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff5a5f;
+            --primary-dark: #e04e53;
+            --secondary: #00a699;
+            --dark: #2d2d2d;
+            --light: #f7f7f7;
+            --gray: #767676;
+            --border: #e6e6e6;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f7f7f7;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: var(--shadow);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            color: var(--primary);
+            font-size: 24px;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--dark);
+        }
+
+        .logo-text span {
+            color: var(--primary);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 8px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 90, 95, 0.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 0 40px;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        /* Editor Section */
+        .editor-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .editor-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .editor-body {
+            display: flex;
+            min-height: 600px;
+        }
+
+        /* Tools Panel */
+        .tools-panel {
+            width: 250px;
+            border-right: 1px solid var(--border);
+            background: var(--light);
+            padding: 20px 0;
+        }
+
+        .tool-category {
+            margin-bottom: 25px;
+        }
+
+        .tool-category h3 {
+            padding: 0 20px 10px;
+            font-size: 1rem;
+            color: var(--gray);
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 10px;
+        }
+
+        .tool-list {
+            list-style: none;
+        }
+
+        .tool-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tool-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .tool-item.active {
+            background: rgba(255, 90, 95, 0.1);
+            color: var(--primary);
+            border-right: 3px solid var(--primary);
+        }
+
+        .tool-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Canvas Area */
+        .canvas-area {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #f0f0f0;
+        }
+
+        .canvas-container {
+            background: white;
+            border-radius: 4px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            margin-bottom: 20px;
+            max-width: 100%;
+            max-height: 500px;
+            overflow: auto;
+        }
+
+        #editor-canvas {
+            max-width: 100%;
+            display: block;
+        }
+
+        .upload-prompt {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .upload-icon {
+            font-size: 60px;
+            color: var(--gray);
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            background: var(--primary);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        /* Adjustments Panel */
+        .adjustments-panel {
+            width: 300px;
+            border-left: 1px solid var(--border);
+            padding: 20px;
+            background: var(--light);
+            overflow-y: auto;
+        }
+
+        .adjustment-group {
+            margin-bottom: 25px;
+        }
+
+        .adjustment-group h4 {
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+
+        .slider-control {
+            margin-bottom: 15px;
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #ddd;
+            outline: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+        }
+
+        .filter-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .filter-option {
+            aspect-ratio: 1;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .filter-option:hover {
+            transform: scale(1.05);
+        }
+
+        .filter-option.active {
+            border: 2px solid var(--primary);
+        }
+
+        /* Ad Container */
+        .ad-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }
+
+        .ad-label {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column ul li a {
+            color: #bbb;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-column ul li a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #bbb;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1100px) {
+            .editor-body {
+                flex-direction: column;
+            }
+            
+            .tools-panel, .adjustments-panel {
+                width: 100%;
+                border: none;
+            }
+            
+            .tools-panel {
+                border-bottom: 1px solid var(--border);
+            }
+            
+            .tool-list {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 10px;
+            }
+            
+            .tool-item {
+                white-space: nowrap;
+                border-right: 1px solid var(--border);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <a href="/" class="logo">
+                <i class="fas fa-image logo-icon"></i>
+                <span class="logo-text">Photo<span>Editor</span></span>
+            </a>
+            
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/tools">All Tools</a></li>
+                    <li><a href="/features">Features</a></li>
+                    <li><a href="/pricing">Pricing</a></li>
+                    <li><a href="/help">Help</a></li>
+                </ul>
+            </nav>
+            
+            <div class="user-actions">
+                <a href="/login" class="btn btn-outline">Log In</a>
+                <a href="/signup" class="btn btn-primary">Sign Up Free</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Free Online Photo Editor</h1>
+            <p>Edit your images in seconds with our easy-to-use photo editor. Crop, resize, add filters, adjust colors, and more - all directly in your browser.</p>
+        </div>
+    </section>
+
+    <!-- Ad Container Top -->
+    <div class="container">
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+            <!-- Google AdSense Code -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4213411576054678"
+                crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-4213411576054678"
+                data-ad-slot="6489727971"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+
+    <!-- Editor Section -->
+    <div class="container">
+        <div class="editor-container">
+            <div class="editor-header">
+                <div class="editor-title">Photo Editor</div>
+                <div class="editor-actions">
+                    <button class="btn btn-outline">
+                        <i class="fas fa-redo"></i> Reset
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-download"></i> Download
+                    </button>
+                </div>
+            </div>
+            
+            <div class="editor-body">
+                <!-- Tools Panel -->
+                <div class="tools-panel">
+                    <div class="tool-category">
+                        <h3>BASIC EDIT</h3>
+                        <ul class="tool-list">
+                            <li class="tool-item active">
+                                <div class="tool-icon"><i class="fas fa-crop-alt"></i></div>
+                                <span>Crop</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-expand-arrows-alt"></i></div>
+                                <span>Resize</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-undo"></i></div>
+                                <span>Rotate</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-sync-alt"></i></div>
+                                <span>Flip</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tool-category">
+                        <h3>ADJUSTMENTS</h3>
+                        <ul class="tool-list">
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-sun"></i></div>
+                                <span>Brightness</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-adjust"></i></div>
+                                <span>Contrast</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-tint"></i></div>
+                                <span>Saturation</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-droplet"></i></div>
+                                <span>Exposure</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tool-category">
+                        <h3>FILTERS & EFFECTS</h3>
+                        <ul class="tool-list">
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-magic"></i></div>
+                                <span>Auto Enhance</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-filter"></i></div>
+                                <span>Filters</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-paint-brush"></i></div>
+                                <span>Effects</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-border-style"></i></div>
+                                <span>Frames</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tool-category">
+                        <h3>ADDITIONS</h3>
+                        <ul class="tool-list">
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-font"></i></div>
+                                <span>Text</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-sticky-note"></i></div>
+                                <span>Stickers</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-draw-polygon"></i></div>
+                                <span>Draw</span>
+                            </li>
+                            <li class="tool-item">
+                                <div class="tool-icon"><i class="fas fa-crop-alt"></i></div>
+                                <span>Background</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Canvas Area -->
+                <div class="canvas-area">
+                    <div class="canvas-container">
+                        <canvas id="editor-canvas" width="800" height="500"></canvas>
+                    </div>
+                    
+                    <div class="upload-prompt">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Upload a photo to start editing</h3>
+                        <p>Drag and drop an image or click the button below</p>
+                        <div class="upload-btn">
+                            <i class="fas fa-upload"></i> Choose Photo
+                        </div>
+                        <input type="file" id="file-input" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+                
+                <!-- Adjustments Panel -->
+                <div class="adjustments-panel">
+                    <div class="adjustment-group">
+                        <h4>Crop & Rotate</h4>
+                        <div class="slider-control">
+                            <div class="slider-label">
+                                <span>Rotation</span>
+                                <span id="rotation-value">0°</span>
+                            </div>
+                            <input type="range" min="-180" max="180" value="0" class="slider" id="rotation-slider">
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 15px;">
+                            <button class="btn btn-outline" style="flex: 1;">
+                                <i class="fas fa-undo"></i> Rotate Left
+                            </button>
+                            <button class="btn btn-outline" style="flex: 1;">
+                                <i class="fas fa-redo"></i> Rotate Right
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="adjustment-group">
+                        <h4>Adjustments</h4>
+                        <div class="slider-control">
+                            <div class="slider-label">
+                                <span>Brightness</span>
+                                <span id="brightness-value">0</span>
+                            </div>
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="brightness-slider">
+                        </div>
+                        
+                        <div class="slider-control">
+                            <div class="slider-label">
+                                <span>Contrast</span>
+                                <span id="contrast-value">0</span>
+                            </div>
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="contrast-slider">
+                        </div>
+                        
+                        <div class="slider-control">
+                            <div class="slider-label">
+                                <span>Saturation</span>
+                                <span id="saturation-value">0</span>
+                            </div>
+                            <input type="range" min="-100" max="100" value="0" class="slider" id="saturation-slider">
+                        </div>
+                    </div>
+                    
+                    <div class="adjustment-group">
+                        <h4>Filters</h4>
+                        <div class="filter-options">
+                            <div class="filter-option active" style="background: #f0f0f0;">None</div>
+                            <div class="filter-option" style="background: #e8e8e8;">B&W</div>
+                            <div class="filter-option" style="background: #f5e8d0;">Vintage</div>
+                            <div class="filter-option" style="background: #e0f0ff;">Cool</div>
+                            <div class="filter-option" style="background: #ffe8e0;">Warm</div>
+                            <div class="filter-option" style="background: #f0e8ff;">Purple</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ad Container Middle -->
+    <div class="container">
+        <div class="ad-container">
+            <div class="ad-label">Advertisement</div>
+            <!-- Google AdSense Code -->
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4213411576054678"
+                crossorigin="anonymous"></script>
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-client="ca-pub-4213411576054678"
+                data-ad-slot="6489727971"
+                data-ad-format="auto"
+                data-full-width-responsive="true"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Photo Tools</h3>
+                    <ul>
+                        <li><a href="#">Photo Editor</a></li>
+                        <li><a href="#">Image Compressor</a></li>
+                        <li><a href="#">Image Resizer</a></li>
+                        <li><a href="#">Crop Image</a></li>
+                        <li><a href="#">Add Text to Image</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>PDF Tools</h3>
+                    <ul>
+                        <li><a href="#">Compress PDF</a></li>
+                        <li><a href="#">PDF to JPG</a></li>
+                        <li><a href="#">JPG to PDF</a></li>
+                        <li><a href="#">Merge PDF</a></li>
+                        <li><a href="#">Split PDF</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Press</a></li>
+                        <li><a href="#">Partners</a></li>
+                        <li><a href="#">Affiliates</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 PhotoEditor. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const fileInput = document.getElementById('file-input');
+        const uploadBtn = document.querySelector('.upload-btn');
+        const canvas = document.getElementById('editor-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Slider elements
+        const rotationSlider = document.getElementById('rotation-slider');
+        const brightnessSlider = document.getElementById('brightness-slider');
+        const contrastSlider = document.getElementById('contrast-slider');
+        const saturationSlider = document.getElementById('saturation-slider');
+        
+        // Value displays
+        const rotationValue = document.getElementById('rotation-value');
+        const brightnessValue = document.getElementById('brightness-value');
+        const contrastValue = document.getElementById('contrast-value');
+        const saturationValue = document.getElementById('saturation-value');
+        
+        // Tool items
+        const toolItems = document.querySelectorAll('.tool-item');
+        
+        // Filter options
+        const filterOptions = document.querySelectorAll('.filter-option');
+        
+        // Variables
+        let currentImage = null;
+        let currentFilter = 'none';
+        
+        // Event Listeners
+        uploadBtn.addEventListener('click', () => fileInput.click());
+        
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) {
+                handleFileSelection(e.target.files[0]);
+            }
+        });
+        
+        // Slider events
+        rotationSlider.addEventListener('input', () => {
+            rotationValue.textContent = `${rotationSlider.value}°`;
+            applyChanges();
+        });
+        
+        brightnessSlider.addEventListener('input', () => {
+            brightnessValue.textContent = brightnessSlider.value;
+            applyChanges();
+        });
+        
+        contrastSlider.addEventListener('input', () => {
+            contrastValue.textContent = contrastSlider.value;
+            applyChanges();
+        });
+        
+        saturationSlider.addEventListener('input', () => {
+            saturationValue.textContent = saturationSlider.value;
+            applyChanges();
+        });
+        
+        // Tool selection
+        toolItems.forEach(item => {
+            item.addEventListener('click', () => {
+                toolItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+            });
+        });
+        
+        // Filter selection
+        filterOptions.forEach(option => {
+            option.addEventListener('click', () => {
+                filterOptions.forEach(o => o.classList.remove('active'));
+                option.classList.add('active');
+                currentFilter = option.textContent.toLowerCase();
+                applyChanges();
+            });
+        });
+        
+        // Functions
+        function handleFileSelection(file) {
+            if (!file.type.match('image.*')) {
+                alert('Please select an image file (JPG, PNG, etc.)');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImage = new Image();
+                currentImage.src = e.target.result;
+                
+                currentImage.onload = () => {
+                    // Hide upload prompt
+                    document.querySelector('.upload-prompt').style.display = 'none';
+                    
+                    // Setup canvas
+                    setupCanvas();
+                    applyChanges();
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        function setupCanvas() {
+            // Set canvas size to match image with max constraints
+            const maxWidth = 800;
+            const maxHeight = 500;
+            
+            let width = currentImage.width;
+            let height = currentImage.height;
+            
+            if (width > maxWidth) {
+                height = (maxWidth / width) * height;
+                width = maxWidth;
+            }
+            
+            if (height > maxHeight) {
+                width = (maxHeight / height) * width;
+                height = maxHeight;
+            }
+            
+            canvas.width = width;
+            canvas.height = height;
+        }
+        
+        function applyChanges() {
+            if (!currentImage) return;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Save context state
+            ctx.save();
+            
+            // Apply rotation
+            const rotation = parseInt(rotationSlider.value);
+            if (rotation !== 0) {
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate(rotation * Math.PI / 180);
+                ctx.translate(-canvas.width / 2, -canvas.height / 2);
+            }
+            
+            // Draw image
+            ctx.drawImage(currentImage, 0, 0, canvas.width, canvas.height);
+            
+            // Apply filters and adjustments
+            applyFilters();
+            
+            // Restore context state
+            ctx.restore();
+        }
+        
+        function applyFilters() {
+            // Get current adjustment values
+            const brightness = parseInt(brightnessSlider.value);
+            const contrast = parseInt(contrastSlider.value);
+            const saturation = parseInt(saturationSlider.value);
+            
+            // Build filter string
+            let filterString = '';
+            
+            // Brightness and contrast
+            if (brightness !== 0) filterString += `brightness(${100 + brightness}%) `;
+            if (contrast !== 0) filterString += `contrast(${100 + contrast}%) `;
+            
+            // Saturation
+            if (saturation !== 0) filterString += `saturate(${100 + saturation}%) `;
+            
+            // Color filters
+            switch(currentFilter) {
+                case 'b&w':
+                    filterString += 'grayscale(100%) ';
+                    break;
+                case 'vintage':
+                    filterString += 'sepia(70%) brightness(110%) contrast(110%) ';
+                    break;
+                case 'cool':
+                    filterString += 'hue-rotate(180deg) saturate(150%) ';
+                    break;
+                case 'warm':
+                    filterString += 'hue-rotate(-30deg) saturate(150%) ';
+                    break;
+                case 'purple':
+                    filterString += 'hue-rotate(270deg) saturate(150%) ';
+                    break;
+            }
+            
+            // Apply filter to canvas
+            ctx.filter = filterString.trim();
+        }
+    </script>
+</body>
+</html>
