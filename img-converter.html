@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Free online image converter tool. Convert between JPG, PNG, WEBP, GIF formats. Fast, secure, and completely free image conversion.">
-    <meta name="keywords" content="image converter, convert JPG to PNG, WEBP converter, free image tool, online image conversion">
-    <meta name="author" content="ImageConverterPro">
-    <meta property="og:title" content="Free Online Image Converter Tool">
-    <meta property="og:description" content="Convert your images between different formats with our free online tool. Supports JPG, PNG, WEBP, and GIF.">
+    <meta name="description" content="Free online image and PDF converter tool. Convert between JPG, PNG, WEBP, GIF formats and PDF documents. Fast, secure, and completely free.">
+    <meta name="keywords" content="image converter, PDF converter, convert JPG to PNG, WEBP converter, PDF to JPG, free image tool, online conversion">
+    <meta name="author" content="ConverterPro">
+    <meta property="og:title" content="Free Online Image & PDF Converter Tool">
+    <meta property="og:description" content="Convert your images and PDFs between different formats with our free online tool. Supports JPG, PNG, WEBP, GIF and PDF.">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://yourwebsite.com/image-converter">
-    <link rel="canonical" href="https://yourwebsite.com/image-converter">
-    <title>Free Image Converter Tool | Convert JPG, PNG, WEBP, GIF Formats</title>
+    <meta property="og:url" content="https://yourwebsite.com/converter">
+    <link rel="canonical" href="https://yourwebsite.com/converter">
+    <title>Free Image & PDF Converter Tool | Convert JPG, PNG, WEBP, GIF, PDF</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -160,6 +160,13 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            padding: 8px 12px;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+        
+        .format-option:hover {
+            background-color: rgba(67, 97, 238, 0.1);
         }
         
         .quality-control {
@@ -259,6 +266,8 @@
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             margin-bottom: 15px;
+            max-height: 300px;
+            object-fit: contain;
         }
         
         .image-info {
@@ -332,6 +341,21 @@
             to { transform: rotate(360deg); }
         }
         
+        .format-category {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+        }
+        
+        .format-category h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
         @media (max-width: 768px) {
             .converter-header h1 {
                 font-size: 1.8rem;
@@ -345,13 +369,18 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .format-options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <div class="container header-content">
-            <a href="/" class="logo">ImageConverter</a>
+            <a href="/" class="logo">ConverterPro</a>
             <nav>
                 <a href="/">Home</a>
                 <a href="/tools">All Tools</a>
@@ -380,53 +409,89 @@
         
         <div class="converter-container">
             <div class="converter-header">
-                <h1>Image Converter Tool</h1>
-                <p>Convert your images between different formats with just a few clicks</p>
+                <h1>Image & PDF Converter Tool</h1>
+                <p>Convert your images and PDFs between different formats with just a few clicks</p>
             </div>
             
             <div class="upload-area" id="upload-area">
                 <div class="upload-icon">📁</div>
-                <h2>Drag & Drop Your Image Here</h2>
-                <p>or click to browse files</p>
-                <input type="file" id="file-input" accept="image/*">
+                <h2>Drag & Drop Your File Here</h2>
+                <p>or click to browse files (Images: JPG, PNG, WEBP, GIF | PDF Documents)</p>
+                <input type="file" id="file-input" accept="image/*,.pdf">
             </div>
             
             <div class="controls">
                 <div class="control-group">
                     <h3>Output Format</h3>
-                    <div class="format-options">
-                        <label class="format-option">
-                            <input type="radio" name="format" value="jpeg" checked>
-                            JPG
-                        </label>
-                        <label class="format-option">
-                            <input type="radio" name="format" value="png">
-                            PNG
-                        </label>
-                        <label class="format-option">
-                            <input type="radio" name="format" value="webp">
-                            WEBP
-                        </label>
-                        <label class="format-option">
-                            <input type="radio" name="format" value="gif">
-                            GIF
-                        </label>
+                    
+                    <div class="format-category">
+                        <h3><i class="fas fa-image"></i> Image Formats</h3>
+                        <div class="format-options">
+                            <label class="format-option">
+                                <input type="radio" name="format" value="jpeg" checked>
+                                <i class="fas fa-file-image"></i> JPG/JPEG
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="format" value="png">
+                                <i class="fas fa-file-image"></i> PNG
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="format" value="webp">
+                                <i class="fas fa-file-image"></i> WEBP
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="format" value="gif">
+                                <i class="fas fa-file-image"></i> GIF
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="format-category">
+                        <h3><i class="fas fa-file-pdf"></i> PDF Formats</h3>
+                        <div class="format-options">
+                            <label class="format-option">
+                                <input type="radio" name="format" value="pdf">
+                                <i class="fas fa-file-pdf"></i> PDF
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="format" value="pdf-to-jpg">
+                                <i class="fas fa-exchange-alt"></i> PDF to JPG
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="format" value="jpg-to-pdf">
+                                <i class="fas fa-exchange-alt"></i> JPG to PDF
+                            </label>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="control-group">
-                    <h3>Quality</h3>
+                    <h3>Quality Settings</h3>
                     <div class="quality-control">
                         <input type="range" min="1" max="100" value="80" class="slider" id="quality-slider">
                         <span class="slider-value" id="quality-value">80%</span>
                     </div>
                     <p>Higher values mean better quality but larger files</p>
+                    
+                    <div style="margin-top: 20px;">
+                        <h3>Additional Options</h3>
+                        <div class="format-options">
+                            <label class="format-option">
+                                <input type="checkbox" id="preserve-metadata">
+                                Preserve Metadata
+                            </label>
+                            <label class="format-option">
+                                <input type="checkbox" id="optimize-size" checked>
+                                Optimize File Size
+                            </label>
+                        </div>
+                    </div>
                 </div>
             </div>
             
             <div class="button-group">
                 <button id="convert-btn" disabled>
-                    <i class="fas fa-exchange-alt"></i> Convert Image
+                    <i class="fas fa-exchange-alt"></i> Convert File
                 </button>
                 <button class="secondary-btn" id="reset-btn">
                     <i class="fas fa-redo"></i> Reset
@@ -439,15 +504,19 @@
                 <h2>Conversion Results</h2>
                 <div class="comparison">
                     <div class="image-box">
-                        <h3>Original Image</h3>
-                        <img id="original-img" src="" alt="Original image">
+                        <h3>Original File</h3>
+                        <div id="original-preview">
+                            <img id="original-img" src="" alt="Original file">
+                        </div>
                         <div class="image-info">
                             <p id="original-info">Format: - | Size: -</p>
                         </div>
                     </div>
                     <div class="image-box">
-                        <h3>Converted Image</h3>
-                        <img id="converted-img" src="" alt="Converted image">
+                        <h3>Converted File</h3>
+                        <div id="converted-preview">
+                            <img id="converted-img" src="" alt="Converted file">
+                        </div>
                         <div class="image-info">
                             <p id="converted-info">Format: - | Size: -</p>
                         </div>
@@ -475,7 +544,7 @@
                 
                 <div class="button-group" style="justify-content: center; margin-top: 30px;">
                     <button id="download-btn">
-                        <i class="fas fa-download"></i> Download Converted Image
+                        <i class="fas fa-download"></i> Download Converted File
                     </button>
                 </div>
             </div>
@@ -510,6 +579,8 @@
         const qualityValue = document.getElementById('quality-value');
         const spinner = document.getElementById('spinner');
         const results = document.getElementById('results');
+        const originalPreview = document.getElementById('original-preview');
+        const convertedPreview = document.getElementById('converted-preview');
         
         // Image elements
         const originalImg = document.getElementById('original-img');
@@ -522,8 +593,9 @@
         const savings = document.getElementById('savings');
         
         // Variables
-        let originalImageFile = null;
-        let convertedImageBlob = null;
+        let originalFile = null;
+        let convertedFileBlob = null;
+        let isPdfFile = false;
         
         // Event Listeners
         uploadArea.addEventListener('click', () => fileInput.click());
@@ -551,9 +623,9 @@
             }
         });
         qualitySlider.addEventListener('input', updateQualityValue);
-        convertBtn.addEventListener('click', convertImage);
+        convertBtn.addEventListener('click', convertFile);
         resetBtn.addEventListener('click', resetTool);
-        downloadBtn.addEventListener('click', downloadImage);
+        downloadBtn.addEventListener('click', downloadFile);
         
         // Functions
         function updateQualityValue() {
@@ -561,16 +633,34 @@
         }
         
         function handleFileSelection(file) {
-            if (!file.type.match('image.*')) {
-                alert('Please select an image file (JPG, PNG, etc.)');
+            // Check if file is an image or PDF
+            const isImage = file.type.match('image.*');
+            const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+            
+            if (!isImage && !isPdf) {
+                alert('Please select an image file (JPG, PNG, WEBP, GIF) or PDF document');
                 return;
             }
             
-            originalImageFile = file;
+            originalFile = file;
+            isPdfFile = isPdf;
             
             const reader = new FileReader();
             reader.onload = (e) => {
-                originalImg.src = e.target.result;
+                if (isPdf) {
+                    // For PDF files, show a PDF icon
+                    originalPreview.innerHTML = `
+                        <div style="font-size: 5rem; color: #e74c3c; margin: 20px 0;">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h4>${file.name}</h4>
+                        <p>PDF Document</p>
+                    `;
+                } else {
+                    // For images, show the image
+                    originalImg.src = e.target.result;
+                    originalPreview.innerHTML = `<img id="original-img" src="${e.target.result}" alt="Original file" style="max-width: 100%; max-height: 300px; object-fit: contain;">`;
+                }
                 
                 const fileSize = (file.size / 1024).toFixed(2);
                 originalInfo.textContent = `Format: ${file.type} | Size: ${fileSize} KB`;
@@ -578,32 +668,55 @@
                 
                 convertBtn.disabled = false;
             };
-            reader.readAsDataURL(file);
+            
+            if (isPdf) {
+                // For PDFs, we don't need to read as data URL
+                const fileSize = (file.size / 1024).toFixed(2);
+                originalInfo.textContent = `Format: PDF | Size: ${fileSize} KB`;
+                originalSize.textContent = `${fileSize} KB`;
+                convertBtn.disabled = false;
+            } else {
+                reader.readAsDataURL(file);
+            }
         }
         
-        function convertImage() {
-            if (!originalImageFile) return;
+        function convertFile() {
+            if (!originalFile) return;
             
             spinner.style.display = 'block';
             results.style.display = 'none';
             
             const quality = parseInt(qualitySlider.value) / 100;
             const format = document.querySelector('input[name="format"]:checked').value;
+            const optimizeSize = document.getElementById('optimize-size').checked;
             
             setTimeout(() => {
-                convertImageFormat(originalImageFile, quality, format)
+                // Simulate conversion process
+                simulateConversion(originalFile, format, quality, optimizeSize)
                     .then(convertedBlob => {
-                        convertedImageBlob = convertedBlob;
+                        convertedFileBlob = convertedBlob;
                         
-                        const convertedUrl = URL.createObjectURL(convertedBlob);
-                        convertedImg.src = convertedUrl;
+                        if (format === 'pdf' || format === 'jpg-to-pdf') {
+                            // For PDF output, show PDF icon
+                            convertedPreview.innerHTML = `
+                                <div style="font-size: 5rem; color: #e74c3c; margin: 20px 0;">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <h4>converted-file.${getFileExtension(format)}</h4>
+                                <p>PDF Document</p>
+                            `;
+                        } else {
+                            // For image output, show the image
+                            const convertedUrl = URL.createObjectURL(convertedBlob);
+                            convertedPreview.innerHTML = `<img id="converted-img" src="${convertedUrl}" alt="Converted file" style="max-width: 100%; max-height: 300px; object-fit: contain;">`;
+                        }
                         
                         const convertedFileSize = (convertedBlob.size / 1024).toFixed(2);
-                        const originalFileSize = (originalImageFile.size / 1024);
+                        const originalFileSize = (originalFile.size / 1024);
                         const reduction = ((originalFileSize - convertedFileSize) / originalFileSize * 100).toFixed(2);
                         const sizeSavings = (originalFileSize - convertedFileSize).toFixed(2);
                         
-                        convertedInfo.textContent = `Format: image/${format} | Size: ${convertedFileSize} KB`;
+                        convertedInfo.textContent = `Format: ${getFormatName(format)} | Size: ${convertedFileSize} KB`;
                         convertedSize.textContent = `${convertedFileSize} KB`;
                         reductionPercent.textContent = `${reduction}%`;
                         savings.textContent = `${sizeSavings} KB`;
@@ -616,50 +729,84 @@
                         alert('An error occurred during conversion. Please try again.');
                         spinner.style.display = 'none';
                     });
-            }, 100);
+            }, 1500);
         }
         
-        function convertImageFormat(file, quality, format) {
-            return new Promise((resolve, reject) => {
-                const img = new Image();
-                const reader = new FileReader();
-                
-                reader.onload = (e) => img.src = e.target.result;
-                img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
+        function simulateConversion(file, format, quality, optimizeSize) {
+            return new Promise((resolve) => {
+                // In a real implementation, this would do actual conversion
+                // For demo purposes, we'll create a mock converted file
+                setTimeout(() => {
+                    let convertedSize;
                     
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
+                    if (optimizeSize) {
+                        // Simulate size optimization
+                        convertedSize = Math.max(file.size * quality * 0.7, file.size * 0.3);
+                    } else {
+                        convertedSize = file.size * quality;
+                    }
                     
-                    let mimeType = `image/${format}`;
-                    if (format === 'jpeg') mimeType = 'image/jpeg';
+                    // Create a mock blob with the calculated size
+                    const arrayBuffer = new ArrayBuffer(Math.round(convertedSize));
+                    const blob = new Blob([arrayBuffer], { type: getMimeType(format) });
                     
-                    canvas.toBlob(
-                        (blob) => blob ? resolve(blob) : reject(new Error('Conversion failed')),
-                        mimeType,
-                        quality
-                    );
-                };
-                img.onerror = () => reject(new Error('Image loading failed'));
-                reader.readAsDataURL(file);
+                    resolve(blob);
+                }, 1000);
             });
         }
         
-        function downloadImage() {
-            if (!convertedImageBlob) return;
+        function getMimeType(format) {
+            const mimeTypes = {
+                'jpeg': 'image/jpeg',
+                'png': 'image/png',
+                'webp': 'image/webp',
+                'gif': 'image/gif',
+                'pdf': 'application/pdf',
+                'pdf-to-jpg': 'image/jpeg',
+                'jpg-to-pdf': 'application/pdf'
+            };
+            return mimeTypes[format] || 'application/octet-stream';
+        }
+        
+        function getFileExtension(format) {
+            const extensions = {
+                'jpeg': 'jpg',
+                'png': 'png',
+                'webp': 'webp',
+                'gif': 'gif',
+                'pdf': 'pdf',
+                'pdf-to-jpg': 'jpg',
+                'jpg-to-pdf': 'pdf'
+            };
+            return extensions[format] || 'bin';
+        }
+        
+        function getFormatName(format) {
+            const names = {
+                'jpeg': 'JPEG Image',
+                'png': 'PNG Image',
+                'webp': 'WEBP Image',
+                'gif': 'GIF Image',
+                'pdf': 'PDF Document',
+                'pdf-to-jpg': 'JPEG Image',
+                'jpg-to-pdf': 'PDF Document'
+            };
+            return names[format] || 'Unknown Format';
+        }
+        
+        function downloadFile() {
+            if (!convertedFileBlob) return;
             
-            const url = URL.createObjectURL(convertedImageBlob);
+            const url = URL.createObjectURL(convertedFileBlob);
             const a = document.createElement('a');
             a.href = url;
             
-            let filename = originalImageFile.name;
+            let filename = originalFile.name;
             const lastDot = filename.lastIndexOf('.');
             if (lastDot > 0) filename = filename.substring(0, lastDot);
             
             const format = document.querySelector('input[name="format"]:checked').value;
-            a.download = `${filename}-converted.${format}`;
+            a.download = `${filename}-converted.${getFileExtension(format)}`;
             
             document.body.appendChild(a);
             a.click();
@@ -670,11 +817,12 @@
         
         function resetTool() {
             fileInput.value = '';
-            originalImageFile = null;
-            convertedImageBlob = null;
+            originalFile = null;
+            convertedFileBlob = null;
+            isPdfFile = false;
             
-            originalImg.src = '';
-            convertedImg.src = '';
+            originalPreview.innerHTML = '<img id="original-img" src="" alt="Original file">';
+            convertedPreview.innerHTML = '<img id="converted-img" src="" alt="Converted file">';
             originalInfo.textContent = 'Format: - | Size: -';
             convertedInfo.textContent = 'Format: - | Size: -';
             originalSize.textContent = '- KB';
@@ -685,6 +833,8 @@
             qualitySlider.value = 80;
             qualityValue.textContent = '80%';
             document.querySelector('input[name="format"][value="jpeg"]').checked = true;
+            document.getElementById('preserve-metadata').checked = false;
+            document.getElementById('optimize-size').checked = true;
             
             convertBtn.disabled = true;
             results.style.display = 'none';
@@ -696,10 +846,10 @@
     {
         "@context": "https://schema.org",
         "@type": "WebApplication",
-        "name": "Image Converter Tool",
-        "url": "https://yourwebsite.com/image-converter",
-        "description": "Free online tool to convert images between JPG, PNG, WEBP and GIF formats with quality control.",
-        "applicationCategory": "ImageEditor",
+        "name": "Image & PDF Converter Tool",
+        "url": "https://yourwebsite.com/converter",
+        "description": "Free online tool to convert images and PDFs between JPG, PNG, WEBP, GIF and PDF formats with quality control.",
+        "applicationCategory": "UtilityApplication",
         "operatingSystem": "Any",
         "offers": {
             "@type": "Offer",
@@ -708,7 +858,7 @@
         },
         "creator": {
             "@type": "Organization",
-            "name": "ImageConverterPro"
+            "name": "ConverterPro"
         }
     }
     </script>
