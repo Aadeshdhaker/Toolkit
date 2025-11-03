@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Converter Pro | Convert & Optimize Files</title>
+    <meta name="description" content="Free online file converter tool. Convert and optimize your files with multiple quality levels and compression options.">
+    <style>
+        :root {
+            --primary: #4a6ee0;
+            --primary-dark: #3a5bc7;
+            --secondary: #6c757d;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --danger: #dc3545;
+            --border-radius: 10px;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), #6a82fb);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            font-size: 28px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 25px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        @media (max-width: 992px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Converter Card */
+        .converter-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), #6a82fb);
+            color: white;
+            padding: 25px 30px;
+        }
+
+        .card-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .card-header p {
+            opacity: 0.9;
+        }
+
+        .card-body {
+            padding: 30px;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: var(--border-radius);
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: var(--transition);
+            cursor: pointer;
+            background-color: #fafbfe;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(74, 110, 224, 0.03);
+        }
+
+        .upload-area.active {
+            border-color: var(--primary);
+            background-color: rgba(74, 110, 224, 0.05);
+        }
+
+        .upload-area.error {
+            border-color: var(--danger);
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .upload-text {
+            margin-bottom: 15px;
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            box-shadow: 0 4px 10px rgba(74, 110, 224, 0.3);
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(74, 110, 224, 0.4);
+        }
+
+        .btn:disabled {
+            background: var(--secondary);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            box-shadow: none;
+        }
+
+        .btn-outline:hover {
+            background: rgba(74, 110, 224, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .file-formats {
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--secondary);
+        }
+
+        .error-message {
+            color: var(--danger);
+            margin-top: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* File Input */
+        #fileInput {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Settings Section */
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .converter-levels {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .level-option {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+            padding: 20px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .level-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .level-option.active {
+            border-color: var(--primary);
+            background: rgba(74, 110, 224, 0.05);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .level-name {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .level-desc {
+            font-size: 13px;
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+
+        .converter-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .converter-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            background: white;
+            text-align: center;
+        }
+
+        .converter-option:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .converter-option.active {
+            border-color: var(--primary);
+            background: rgba(74, 110, 224, 0.05);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-icon {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+
+        .option-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 16px;
+        }
+
+        .option-desc {
+            font-size: 13px;
+            color: var(--secondary);
+            line-height: 1.4;
+        }
+
+        .optimization-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        /* File Info */
+        .file-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+        }
+
+        .info-label {
+            font-size: 14px;
+            color: var(--secondary);
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .savings {
+            color: var(--success);
+        }
+
+        /* Success Message */
+        .success-message {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid var(--success);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-icon {
+            color: var(--success);
+            font-size: 20px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .ad-container {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            text-align: center;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .ad-label {
+            font-size: 12px;
+            color: var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .ad-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f0f2f5, #e4e7ec);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-weight: 500;
+        }
+
+        .features-section {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 25px;
+        }
+
+        .features-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .features-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
+        }
+
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+        }
+
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+
+        .feature-icon {
+            color: var(--primary);
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark);
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .footer-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: #adb5bd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-links a:hover {
+            color: white;
+            padding-left: 5px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #495057;
+            color: #adb5bd;
+            font-size: 14px;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+            
+            nav ul {
+                gap: 15px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .converter-levels, .converter-options {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .file-info {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .file-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-body {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🔄</span>
+                    <span>FileConverter<span style="color: #ffd700;">Pro</span></span>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Tools</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-content">
+            <div class="converter-section">
+                <div class="converter-card">
+                    <div class="card-header">
+                        <h1>File Converter Tool</h1>
+                        <p>Convert and optimize your files with multiple quality levels</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="upload-area" id="uploadArea">
+                            <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.pdf,.xlsx,.xls">
+                            <div class="upload-icon">📄</div>
+                            <p class="upload-text">Drag & drop your file here or click to browse</p>
+                            <button class="btn" id="selectFileBtn">Select File</button>
+                            <p class="file-formats">Supported formats: JPEG, JPG, PNG, PDF, XLS, XLSX</p>
+                            <div class="error-message" id="errorMessage">Please select a valid file format (JPG, JPEG, PNG, PDF, XLS, XLSX)</div>
+                        </div>
+                        
+                        <div class="success-message" id="successMessage">
+                            <span class="success-icon">✓</span>
+                            <span id="successText">Conversion completed successfully!</span>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3 class="section-title">Converter Type</h3>
+                            <div class="converter-options">
+                                <div class="converter-option active" data-option="pdf">
+                                    <div class="option-icon">📄</div>
+                                    <div class="option-name">To PDF</div>
+                                    <div class="option-desc">Convert files to PDF format</div>
+                                </div>
+                                <div class="converter-option" data-option="jpg">
+                                    <div class="option-icon">🖼️</div>
+                                    <div class="option-name">To JPG</div>
+                                    <div class="option-desc">Convert files to JPG format</div>
+                                </div>
+                                <div class="converter-option" data-option="jpeg">
+                                    <div class="option-icon">🖼️</div>
+                                    <div class="option-name">To JPEG</div>
+                                    <div class="option-desc">Convert files to JPEG format</div>
+                                </div>
+                                <div class="converter-option" data-option="png">
+                                    <div class="option-icon">🖼️</div>
+                                    <div class="option-name">To PNG</div>
+                                    <div class="option-desc">Convert files to PNG format</div>
+                                </div>
+                                <div class="converter-option" data-option="excel">
+                                    <div class="option-icon">📊</div>
+                                    <div class="option-name">To Excel</div>
+                                    <div class="option-desc">Convert files to Excel format</div>
+                                </div>
+                            </div>
+                            
+                            <h3 class="section-title">Converter Level</h3>
+                            <div class="converter-levels">
+                                <div class="level-option active" data-level="low">
+                                    <div class="level-name">Low Compression</div>
+                                    <div class="level-desc">Best quality, larger file size</div>
+                                </div>
+                                <div class="level-option" data-level="medium">
+                                    <div class="level-name">Medium Compression</div>
+                                    <div class="level-desc">Good balance of quality and size</div>
+                                </div>
+                                <div class="level-option" data-level="high">
+                                    <div class="level-name">High Compression</div>
+                                    <div class="level-desc">Smaller file size, reduced quality</div>
+                                </div>
+                            </div>
+                            
+                            <h3 class="section-title">Optimization Options</h3>
+                            <div class="optimization-options">
+                                <div class="option-item">
+                                    <input type="checkbox" id="optimizeImages" checked>
+                                    <label for="optimizeImages">Optimize images for web</label>
+                                </div>
+                                <div class="option-item">
+                                    <input type="checkbox" id="removeMetadata">
+                                    <label for="removeMetadata">Remove metadata</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="file-info">
+                            <div class="info-card">
+                                <div class="info-label">Original Size</div>
+                                <div class="info-value" id="originalSize">0 KB</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-label">Compressed Size</div>
+                                <div class="info-value" id="compressedSize">0 KB</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-label">Reduction</div>
+                                <div class="info-value" id="reduction">0%</div>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-label">Savings</div>
+                                <div class="info-value savings" id="savings">0 KB</div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <button class="btn" id="convertBtn" disabled>Convert Now</button>
+                            <button class="btn btn-outline" id="downloadBtn" disabled>Download File</button>
+                            <button class="btn btn-outline" id="resetBtn">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="ad-container">
+                    <div class="ad-label">Advertisement</div>
+                    <div class="ad-placeholder">
+                        Google AdSense Ad Unit
+                        <!-- Insert Google AdSense code here -->
+                        <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR_AD_UNIT_ID" crossorigin="anonymous"></script> -->
+                    </div>
+                </div>
+                
+                <div class="features-section">
+                    <h3 class="features-title">Why Use Our Converter?</h3>
+                    <ul class="features-list">
+                        <li><span class="feature-icon">✓</span> Fully secure - files are deleted after conversion</li>
+                        <li><span class="feature-icon">✓</span> No registration required</li>
+                        <li><span class="feature-icon">✓</span> Multiple conversion levels</li>
+                        <li><span class="feature-icon">✓</span> Optimize for web or print</li>
+                        <li><span class="feature-icon">✓</span> Support for multiple file formats</li>
+                        <li><span class="feature-icon">✓</span> 100% free to use</li>
+                    </ul>
+                </div>
+                
+                <div class="ad-container">
+                    <div class="ad-label">Advertisement</div>
+                    <div class="ad-placeholder">
+                        Google AdSense Ad Unit
+                        <!-- Insert Google AdSense code here -->
+                        <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR_AD_UNIT_ID" crossorigin="anonymous"></script> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">File Converter Pro</h3>
+                    <p>Free online tool to convert and optimize your files with multiple quality levels and optimization options.</p>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">PDF to JPG</a></li>
+                        <li><a href="#">JPG to PDF</a></li>
+                        <li><a href="#">PDF Compressor</a></li>
+                        <li><a href="#">Excel to PDF</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Support</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                &copy; 2023 File Converter Pro. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const fileInput = document.getElementById('fileInput');
+            const uploadArea = document.getElementById('uploadArea');
+            const selectFileBtn = document.getElementById('selectFileBtn');
+            const convertBtn = document.getElementById('convertBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const resetBtn = document.getElementById('resetBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            const successText = document.getElementById('successText');
+            
+            const converterOptions = document.querySelectorAll('.converter-option');
+            const levelOptions = document.querySelectorAll('.level-option');
+            
+            // Allowed file types
+            const allowedTypes = ['jpg', 'jpeg', 'png', 'pdf', 'xlsx', 'xls'];
+            let selectedFile = null;
+            let selectedConverter = 'pdf';
+            let selectedLevel = 'low';
+
+            // Event Listeners
+            selectFileBtn.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', handleFileSelect);
+            
+            uploadArea.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.classList.add('active');
+            });
+            
+            uploadArea.addEventListener('dragleave', function() {
+                this.classList.remove('active');
+            });
+            
+            uploadArea.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.classList.remove('active');
+                if (e.dataTransfer.files.length) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+            
+            converterOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    converterOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedConverter = this.getAttribute('data-option');
+                    updateUI();
+                });
+            });
+            
+            levelOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    levelOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    selectedLevel = this.getAttribute('data-level');
+                    updateFileInfo();
+                });
+            });
+            
+            convertBtn.addEventListener('click', simulateConversion);
+            
+            resetBtn.addEventListener('click', resetConverter);
+            
+            // Functions
+            function handleFileSelect(e) {
+                if (e.target.files.length) {
+                    handleFile(e.target.files[0]);
+                }
+            }
+            
+            function handleFile(file) {
+                const fileExtension = file.name.split('.').pop().toLowerCase();
+                
+                if (!allowedTypes.includes(fileExtension)) {
+                    showError();
+                    return;
+                }
+                
+                hideError();
+                hideSuccess();
+                selectedFile = file;
+                
+                // Update UI
+                uploadArea.innerHTML = `
+                    <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.pdf,.xlsx,.xls">
+                    <div class="upload-icon">✅</div>
+                    <p class="upload-text">${file.name}</p>
+                    <p class="file-formats">${formatFileSize(file.size)} • Click to change file</p>
+                `;
+                
+                // Re-add file input event listener
+                document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+                
+                // Enable convert button
+                convertBtn.disabled = false;
+                
+                // Update file info
+                updateFileInfo();
+            }
+            
+            function showError() {
+                uploadArea.classList.add('error');
+                errorMessage.style.display = 'block';
+                convertBtn.disabled = true;
+            }
+            
+            function hideError() {
+                uploadArea.classList.remove('error');
+                errorMessage.style.display = 'none';
+            }
+            
+            function showSuccess(message) {
+                successText.textContent = message;
+                successMessage.style.display = 'flex';
+            }
+            
+            function hideSuccess() {
+                successMessage.style.display = 'none';
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            function updateFileInfo() {
+                if (!selectedFile) return;
+                
+                const originalSize = selectedFile.size;
+                let compressedSize;
+                
+                switch(selectedLevel) {
+                    case 'low':
+                        compressedSize = originalSize * 0.75; // 25% reduction
+                        break;
+                    case 'medium':
+                        compressedSize = originalSize * 0.5; // 50% reduction
+                        break;
+                    case 'high':
+                        compressedSize = originalSize * 0.25; // 75% reduction
+                        break;
+                    default:
+                        compressedSize = originalSize;
+                }
+                
+                const reduction = ((originalSize - compressedSize) / originalSize * 100).toFixed(0);
+                const savings = originalSize - compressedSize;
+                
+                document.getElementById('originalSize').textContent = formatFileSize(originalSize);
+                document.getElementById('compressedSize').textContent = formatFileSize(compressedSize);
+                document.getElementById('reduction').textContent = `${reduction}%`;
+                document.getElementById('savings').textContent = formatFileSize(savings);
+            }
+            
+            function updateUI() {
+                // In a real implementation, this would update the UI based on selected converter
+                console.log(`Converter changed to: ${selectedConverter}`);
+            }
+            
+            function simulateConversion() {
+                if (!selectedFile) return;
+                
+                // Simulate conversion process
+                convertBtn.disabled = true;
+                convertBtn.textContent = 'Converting...';
+                
+                setTimeout(() => {
+                    // Enable download button
+                    downloadBtn.disabled = false;
+                    convertBtn.textContent = 'Convert Now';
+                    convertBtn.disabled = false;
+                    
+                    // Show success message with proper format
+                    const targetFormat = selectedConverter.toUpperCase();
+                    showSuccess(`Conversion completed successfully! Your ${selectedFile.name} has been converted to ${targetFormat}.`);
+                }, 2000);
+            }
+            
+            function resetConverter() {
+                // Reset all values
+                selectedFile = null;
+                document.getElementById('originalSize').textContent = '0 KB';
+                document.getElementById('compressedSize').textContent = '0 KB';
+                document.getElementById('reduction').textContent = '0%';
+                document.getElementById('savings').textContent = '0 KB';
+                
+                // Reset upload area
+                uploadArea.innerHTML = `
+                    <input type="file" id="fileInput" accept=".jpg,.jpeg,.png,.pdf,.xlsx,.xls">
+                    <div class="upload-icon">📄</div>
+                    <p class="upload-text">Drag & drop your file here or click to browse</p>
+                    <button class="btn" id="selectFileBtn">Select File</button>
+                    <p class="file-formats">Supported formats: JPEG, JPG, PNG, PDF, XLS, XLSX</p>
+                    <div class="error-message" id="errorMessage">Please select a valid file format (JPG, JPEG, PNG, PDF, XLS, XLSX)</div>
+                `;
+                
+                // Re-attach event listeners
+                document.getElementById('fileInput').addEventListener('change', handleFileSelect);
+                document.getElementById('selectFileBtn').addEventListener('click', () => document.getElementById('fileInput').click());
+                
+                // Disable buttons
+                convertBtn.disabled = true;
+                downloadBtn.disabled = true;
+                
+                // Hide messages
+                hideError();
+                hideSuccess();
+            }
+        });
+    </script>
+</body>
+</html>
