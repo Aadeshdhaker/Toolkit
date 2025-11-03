@@ -834,6 +834,7 @@
             let selectedFile = null;
             let selectedConverter = 'pdf';
             let selectedLevel = 'low';
+            let convertedFile = null;
 
             // Event Listeners
             selectFileBtn.addEventListener('click', () => fileInput.click());
@@ -876,6 +877,8 @@
             });
             
             convertBtn.addEventListener('click', simulateConversion);
+            
+            downloadBtn.addEventListener('click', downloadFile);
             
             resetBtn.addEventListener('click', resetConverter);
             
@@ -986,6 +989,31 @@
                 convertBtn.textContent = 'Converting...';
                 
                 setTimeout(() => {
+                    // Create a simulated converted file
+                    const fileName = selectedFile.name.split('.')[0];
+                    const fileExtension = getFileExtension(selectedConverter);
+                    const convertedFileName = `${fileName}_converted.${fileExtension}`;
+                    
+                    // Calculate file size based on compression level
+                    let convertedFileSize;
+                    switch(selectedLevel) {
+                        case 'low':
+                            convertedFileSize = selectedFile.size * 0.75;
+                            break;
+                        case 'medium':
+                            convertedFileSize = selectedFile.size * 0.5;
+                            break;
+                        case 'high':
+                            convertedFileSize = selectedFile.size * 0.25;
+                            break;
+                        default:
+                            convertedFileSize = selectedFile.size;
+                    }
+                    
+                    // Create a blob with the simulated file content
+                    const fileContent = `This is a simulated ${selectedConverter.toUpperCase()} file converted from ${selectedFile.name}.`;
+                    convertedFile = new Blob([fileContent], { type: getMimeType(selectedConverter) });
+                    
                     // Enable download button
                     downloadBtn.disabled = false;
                     convertBtn.textContent = 'Convert Now';
@@ -994,12 +1022,66 @@
                     // Show success message with proper format
                     const targetFormat = selectedConverter.toUpperCase();
                     showSuccess(`Conversion completed successfully! Your ${selectedFile.name} has been converted to ${targetFormat}.`);
+                    
+                    // Update file info with actual converted file size
+                    document.getElementById('compressedSize').textContent = formatFileSize(convertedFileSize);
+                    const reduction = ((selectedFile.size - convertedFileSize) / selectedFile.size * 100).toFixed(0);
+                    const savings = selectedFile.size - convertedFileSize;
+                    document.getElementById('reduction').textContent = `${reduction}%`;
+                    document.getElementById('savings').textContent = formatFileSize(savings);
                 }, 2000);
+            }
+            
+            function downloadFile() {
+                if (!convertedFile) return;
+                
+                // Create a download link
+                const url = URL.createObjectURL(convertedFile);
+                const a = document.createElement('a');
+                a.href = url;
+                
+                // Set the filename based on original file name and target format
+                const fileName = selectedFile.name.split('.')[0];
+                const fileExtension = getFileExtension(selectedConverter);
+                a.download = `${fileName}_converted.${fileExtension}`;
+                
+                // Trigger the download
+                document.body.appendChild(a);
+                a.click();
+                
+                // Clean up
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            }
+            
+            function getFileExtension(converterType) {
+                switch(converterType) {
+                    case 'pdf': return 'pdf';
+                    case 'jpg': return 'jpg';
+                    case 'jpeg': return 'jpeg';
+                    case 'png': return 'png';
+                    case 'excel': return 'xlsx';
+                    default: return 'txt';
+                }
+            }
+            
+            function getMimeType(converterType) {
+                switch(converterType) {
+                    case 'pdf': return 'application/pdf';
+                    case 'jpg': return 'image/jpeg';
+                    case 'jpeg': return 'image/jpeg';
+                    case 'png': return 'image/png';
+                    case 'excel': return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                    default: return 'text/plain';
+                }
             }
             
             function resetConverter() {
                 // Reset all values
                 selectedFile = null;
+                convertedFile = null;
                 document.getElementById('originalSize').textContent = '0 KB';
                 document.getElementById('compressedSize').textContent = '0 KB';
                 document.getElementById('reduction').textContent = '0%';
