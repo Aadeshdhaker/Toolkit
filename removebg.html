@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolkit - Background Remover</title>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --primary-light: #8A84FF;
+            --secondary: #FF6584;
+            --text: #333333;
+            --text-light: #666666;
+            --bg: #F5F7FF;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-shadow: rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --primary: #8A84FF;
+            --primary-light: #A29DFF;
+            --secondary: #FF6584;
+            --text: #FFFFFF;
+            --text-light: #CCCCCC;
+            --bg: #121212;
+            --card-bg: rgba(30, 30, 30, 0.8);
+            --card-shadow: rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: var(--card-bg);
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 15px var(--card-shadow);
+            transition: var(--transition);
+            font-size: 1.2rem;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Cards */
+        .card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px var(--card-shadow);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px var(--card-shadow);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--primary-light);
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(108, 99, 255, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .upload-text {
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .upload-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .upload-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        /* Preview Area */
+        .preview-area {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .preview-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .preview-box {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .preview-label {
+            display: block;
+            margin-top: 10px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 150px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .action-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .action-btn.secondary {
+            background: var(--secondary);
+        }
+
+        .action-btn.secondary:hover:not(:disabled) {
+            background: #FF7A95;
+        }
+
+        /* Loading Indicator */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(108, 99, 255, 0.2);
+            border-left: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Ad Container */
+        .ad-container {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            min-height: 90px;
+        }
+
+        .ad-slot {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+            max-width: 728px;
+            box-shadow: 0 5px 15px var(--card-shadow);
+        }
+
+        .ad-label {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .card {
+                padding: 20px;
+            }
+            
+            .preview-container {
+                flex-direction: column;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main App -->
+    <div class="container">
+        <header>
+            <div class="logo">Toolkit</div>
+            <button class="theme-toggle" id="themeToggle">🌙</button>
+        </header>
+
+        <!-- Ad Container -->
+        <div class="ad-container">
+            <div class="ad-slot">
+                <div class="ad-label">Advertisement</div>
+                <!-- AdSense Ad Unit -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                     data-ad-slot="XXXXXXXXXX"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Background Remover Card -->
+            <div class="card">
+                <h2 class="card-title">🪄 Background Remover</h2>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon">📷</div>
+                    <p class="upload-text">Drag & drop your image here or click to browse</p>
+                    <button class="upload-btn">Choose File</button>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="preview-area" id="previewArea">
+                    <h3 class="preview-title">Preview</h3>
+                    <div class="preview-container">
+                        <div class="preview-box">
+                            <img id="originalPreview" class="preview-image" src="" alt="Original Image">
+                            <span class="preview-label">Original</span>
+                        </div>
+                        <div class="preview-box">
+                            <img id="resultPreview" class="preview-image" src="" alt="Result Image">
+                            <span class="preview-label">Background Removed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="loading" id="loadingIndicator">
+                    <div class="spinner"></div>
+                    <p>Removing background... This may take a few seconds.</p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="action-btn" id="removeBgBtn">
+                        <span>🪄 Remove Background</span>
+                    </button>
+                    <button class="action-btn secondary" id="downloadBtn" disabled>
+                        <span>⬇️ Download</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Instructions Card -->
+            <div class="card">
+                <h2 class="card-title">ℹ️ How to Use</h2>
+                <div style="color: var(--text-light); line-height: 1.6;">
+                    <p style="margin-bottom: 15px;">1. <strong>Upload</strong> an image by clicking the upload area or dragging and dropping a file.</p>
+                    <p style="margin-bottom: 15px;">2. <strong>Preview</strong> your original image to make sure it's the correct one.</p>
+                    <p style="margin-bottom: 15px;">3. <strong>Remove Background</strong> by clicking the "Remove Background" button.</p>
+                    <p style="margin-bottom: 15px;">4. <strong>Download</strong> your processed image with the background removed.</p>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(108, 99, 255, 0.1); border-radius: 10px;">
+                        <p><strong>💡 Tip:</strong> For best results, use images with clear contrast between the subject and background.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ad Container -->
+        <div class="ad-container">
+            <div class="ad-slot">
+                <div class="ad-label">Advertisement</div>
+                <!-- AdSense Ad Unit -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                     data-ad-slot="XXXXXXXXXX"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>
+                    (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
+
+        <footer>
+            <p>Toolkit &copy; 2023 - Professional Background Removal Tool</p>
+        </footer>
+    </div>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const previewArea = document.getElementById('previewArea');
+        const originalPreview = document.getElementById('originalPreview');
+        const resultPreview = document.getElementById('resultPreview');
+        const removeBgBtn = document.getElementById('removeBgBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        // API Key for background removal (Replace with your actual API key)
+        const API_KEY = 'x3z2kUffNB8idwuLG1GC4A1L';
+        const API_URL = 'https://api.remove.bg/v1.0/removebg';
+
+        // Theme toggle functionality
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            
+            // Save theme preference to localStorage
+            localStorage.setItem('toolkit-theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        // Load saved theme preference
+        const savedTheme = localStorage.getItem('toolkit-theme');
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-mode');
+            themeToggle.textContent = '☀️';
+        }
+
+        // File upload functionality
+        uploadArea.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', handleFileSelect);
+
+        // Drag and drop functionality
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary)';
+            uploadArea.style.background = 'rgba(108, 99, 255, 0.1)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'var(--primary-light)';
+            uploadArea.style.background = 'transparent';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary-light)';
+            uploadArea.style.background = 'transparent';
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                handleFileSelect(e);
+            }
+        });
+
+        // Handle file selection
+        function handleFileSelect(e) {
+            const file = e.target.files[0] || e.dataTransfer.files[0];
+            
+            if (!file) return;
+            
+            if (!file.type.match('image.*')) {
+                alert('Please select an image file (JPEG, PNG, etc.)');
+                return;
+            }
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                originalPreview.src = e.target.result;
+                previewArea.style.display = 'block';
+                removeBgBtn.disabled = false;
+                resultPreview.src = '';
+                downloadBtn.disabled = true;
+                
+                // Save to localStorage
+                localStorage.setItem('toolkit-original-image', e.target.result);
+            };
+            
+            reader.readAsDataURL(file);
+        }
+
+        // Remove background functionality
+        removeBgBtn.addEventListener('click', removeBackground);
+
+        async function removeBackground() {
+            if (!fileInput.files.length) {
+                alert('Please select an image first');
+                return;
+            }
+            
+            loadingIndicator.style.display = 'block';
+            removeBgBtn.disabled = true;
+            
+            const formData = new FormData();
+            formData.append('image_file', fileInput.files[0]);
+            formData.append('size', 'auto');
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'X-Api-Key': API_KEY
+                    },
+                    body: formData
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+                
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+                
+                resultPreview.src = url;
+                downloadBtn.disabled = false;
+                
+                // Save to localStorage
+                const reader = new FileReader();
+                reader.onload = function() {
+                    localStorage.setItem('toolkit-result-image', reader.result);
+                };
+                reader.readAsDataURL(blob);
+                
+            } catch (error) {
+                console.error('Error removing background:', error);
+                alert('Failed to remove background. Please try again with a different image or check your internet connection.');
+            } finally {
+                loadingIndicator.style.display = 'none';
+                removeBgBtn.disabled = false;
+            }
+        }
+
+        // Download functionality
+        downloadBtn.addEventListener('click', () => {
+            if (!resultPreview.src) return;
+            
+            const link = document.createElement('a');
+            link.href = resultPreview.src;
+            link.download = 'background-removed.png';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        });
+
+        // Load saved images from localStorage on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedOriginal = localStorage.getItem('toolkit-original-image');
+            const savedResult = localStorage.getItem('toolkit-result-image');
+            
+            if (savedOriginal) {
+                originalPreview.src = savedOriginal;
+                previewArea.style.display = 'block';
+                removeBgBtn.disabled = false;
+            }
+            
+            if (savedResult) {
+                resultPreview.src = savedResult;
+                downloadBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
